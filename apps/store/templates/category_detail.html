@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="text-2xl my-10 ml-10">{{category}}</h1> 
+
+{% with products as list_products %}
+<div class="container">
+    {% include 'parts/product_list.html' %}
+
+      {% endwith %}
+    </div>
+{% endblock content %}
