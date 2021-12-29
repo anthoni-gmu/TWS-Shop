@@ -9,16 +9,17 @@ def signup(request):
         form = SignUpForm(request.POST)
         
         accountform=AccountForm(request.POST)
-        
-        
+        print(form.errors)
         if form.is_valid() and accountform.is_valid():
             user=form.save()
-            userprofile=accountform.save(commit=False)
-            userprofile.user=user
-            userprofile.save()
+            account=accountform.save(commit=False)
+            account.user=user
+            account.save()
             
             login(request, user)
             return redirect('frontpage')
+        else:
+            print('xdddd')
     else:
         form=SignUpForm()
         accountform=AccountForm()

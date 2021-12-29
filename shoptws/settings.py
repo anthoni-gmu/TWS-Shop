@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'apps.cart',
     'apps.coupon',
     'apps.accounts',
+    'apps.order',
 ]
 #accounts
 LOGIN_URL='login'

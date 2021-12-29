@@ -5,13 +5,30 @@ from django.contrib.auth.forms import User
 from .models import UserAccount
 
 class AccountForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(AccountForm, self).__init__(*args, **kwargs)
-        self.fields['address'].widget.attrs['class']='input'
-        self.fields['zipcode'].widget.attrs['class']='input'
-        self.fields['place'].widget.attrs['class']='input'
-        self.fields['phone'].widget.attrs['class']='input'
-        
+    address = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600',
+            'placeholder': 'Adrress'
+        }), required=True
+    )
+    zipcode = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600',
+            'placeholder': 'Codigó zip'
+        }), required=True
+    )
+    place = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600',
+            'placeholder': 'Place'
+        }), required=True
+    )
+    phone = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600',
+            'placeholder': 'Phone'
+        }), required=True
+    )
     class Meta:
         model=UserAccount
         fields='__all__'
@@ -21,21 +38,49 @@ class AccountForm(forms.ModelForm):
 
 
 class SignUpForm(UserCreationForm):
-    first_name=forms.CharField(max_length=50,required=True)
-    last_name=forms.CharField(max_length=50,required=True)
-    email=forms.EmailField(max_length=255,required=True)
+   
     
-    def __init__(self, *args, **kwargs):
-        super(SignUpForm, self).__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs['class']='input'
-        self.fields['email'].widget.attrs['class']='input'
-        self.fields['password1'].widget.attrs['class']='input'
-        self.fields['password2'].widget.attrs['class']='input'
-        self.fields['first_name'].widget.attrs['class']='input'
-        
-        self.fields['last_name'].widget.attrs['class']='input'
-        
-        
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600',
+            'placeholder': 'First_name'
+        }), required=True
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600',
+            'placeholder': 'Last_name'
+        }), required=True
+    )
+    email = forms.EmailField(
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600',
+            'placeholder': 'Email'
+        }), required=True
+    )
+    
+    password1 = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600',
+            'placeholder': 'Password1',
+            'type': 'password'
+            
+        }), required=True
+    )
+    password2 = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600',
+            'placeholder': 'Password2',
+            'type': 'password'
+        }), required=True
+    )
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600',
+            'placeholder': 'Username'
+        }), required=True
+    )
+   
     
     class Meta:
         model =User
