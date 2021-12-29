@@ -3,9 +3,13 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.contrib.auth import views
+
+
 from apps.store.views import product_detail,category_detail,search
 from apps.core.views import frontpage
 from apps.cart.views import cart_detail
+from apps.accounts.views import signup,myaccount
 
 
 from apps.store.api import api_add_to_cart,api_remove_from_cart
@@ -19,6 +23,16 @@ urlpatterns = [
     path('cart/',cart_detail,name='cart'),
     
     path('admin/', admin.site.urls),
+    
+    #Auth
+    path('myaccount/',myaccount,name='myaccount'),
+    path('signup/',signup,name='signup'),
+    path('login/',views.LoginView.as_view(template_name='login.html'),name='login'),
+    path('logout/',views.LogoutView.as_view(),name='logout'),
+    
+    
+    #
+    
     
     #API
     path('api/can_use/',api_can_use,name='api_can_use'),

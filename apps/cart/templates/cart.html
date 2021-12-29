@@ -15,6 +15,8 @@
         <h3 class="font-semibold text-gray-600 text-xs uppercase w-1/5 text-center">Quantity</h3>
         <h3 class="font-semibold text-gray-600 text-xs uppercase w-1/5 text-center">Price</h3>
         <h3 class="font-semibold text-gray-600 text-xs uppercase w-1/5 text-center">Total</h3>
+        <h3 class="font-semibold text-gray-600 text-xs uppercase w-1/5 text-center"></h3>
+
       </div>
       <div class="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5" v-for="product in products">
         <div class="flex w-2/5">
@@ -23,8 +25,7 @@
             <img class="h-24" :src="product.thumbnail" alt="">
           </div>
           <div class="flex flex-col justify-between ml-4 flex-grow">
-            <span class="font-bold text-sm">[[product.title]]</span>
-            <button @click="removeFromCart(product.id)" class="font-semibold hover:text-red-500 text-gray-500 text-xs">Remove</button>
+            <a :href="product.url" class="font-bold text-sm">[[product.title]]</a>
           </div>
         </div>
         <div class="flex justify-center w-1/5">
@@ -45,6 +46,8 @@
         </div>
         <span class="text-center w-1/5 font-semibold text-sm">S/[[product.price]]</span>
         <span class="text-center w-1/5 font-semibold text-sm">S/[[product.total_price]]</span>
+            <button @click="removeFromCart(product.id)" class="font-semibold hover:text-red-500 r w-1/5 text-gray-500 text-xs"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"></path><path d="M9 10h2v8H9zm4 0h2v8h-2z"></path></svg></button>
+
       </div>
 
 

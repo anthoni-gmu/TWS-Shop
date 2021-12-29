@@ -40,6 +40,22 @@
                         </svg>
                     </button>
                 </form>
+               {% if request.user.is_authenticated %}
+					<div class="navbar-item" >
+
+						<a href="{% url 'myaccount' %}" class="button is-light">My account</a>
+					</div>
+
+					{% else %}
+					<div class="navbar-item" >
+						<div class="buttons" >
+
+							<a href="{% url 'signup' %}" class="button is-primary">Sign Up</a>
+							<a href="{% url 'login' %}" class="button is-light">Log in</a>
+					</div>
+
+					</div>
+					{% endif %}
                 <div class="flex flex-col md:flex-row md:mx-6">
                     <a class="my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0"
                     href="{% url 'frontpage' %}">Inicio</a>

@@ -37,7 +37,21 @@ INSTALLED_APPS = [
     'apps.store',
     'apps.cart',
     'apps.coupon',
+    'apps.accounts',
 ]
+#accounts
+LOGIN_URL='login'
+LOGIN_REDIRECT_URL='cart'
+LOGOUT_REDIRECT_URL='frontpage'
+#
+
+
+# Email
+EMAIL_HOST="localhost"
+EMAIL_PORT="1025"
+
+#
+
 
 #tailwind
 
