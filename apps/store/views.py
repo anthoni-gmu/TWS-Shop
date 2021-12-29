@@ -27,8 +27,30 @@ def search(request):
 
 def product_detail(request,category_slug,slug):
     product=get_object_or_404(Product,slug=slug)
+    
+    related_products=list(product.category.products.filter(parent=None).exclude(id=product.id))
+    if product.variants.all():
+        products_colors=list(product.variants.all().exclude(id=product.id))
+        
+    elif product.parent:
+        products_colors=list(product.parent.variants.all().exclude(id=product.id))
+        related_products=list(product.category.products.filter(parent=None).exclude(id=product.parent.id))
+        
+        products_colors.append(product.parent)
+    else:
+        products_colors=[] 
+        
+    if len(related_products)>=3:
+        related_products=random.sample(related_products,3)
+        
+        
+        
+
+        
     context={
         'product':product,
+        'related_products':related_products,
+        'products_colors':products_colors
     }
     return render(request, 'product_detail.html', context)
 

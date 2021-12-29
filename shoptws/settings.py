@@ -8,11 +8,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 SECRET_KEY = 'django-insecure-v*u)y#2i+ou^$d^7_mb6xjfb%ao1$ow&xp5s2(b#2hz739$$6@'
+STRIPE_API_KEY_PUBLISHABLE="pk_test_51JujYiCKMB1QFzwpoFJFb5oHQzgBFRb0I77QjdiBL9Z1gGFede4mwJuAuCxSRt05OzGelaqte1FEjfE0aaAbNDZV00V4XEqQE9"
+STRIPE_API_KEY_HIDDEN="sk_test_51JujYiCKMB1QFzwpoFfeIeTPqJeXCEQgTDGX5aOp4gUOFSr4Fxsz5au7wL2N7xX8iDAWMXhhBiqGHW21sBo18IPJ00WVtY8VRs"
+
 
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
+
+SESSION_COOKIE_AGE = 86400
+CART_SESSION_ID='cart'
 
 # Application definition
 
@@ -30,6 +36,7 @@ INSTALLED_APPS = [
     'apps.core',
     'apps.store',
     'apps.cart',
+    'apps.coupon',
 ]
 
 #tailwind
@@ -65,6 +72,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'apps.store.context_processors.menu_categories',
+                'apps.cart.context_processors.cart',
+                
+                
             ],
         },
     },
