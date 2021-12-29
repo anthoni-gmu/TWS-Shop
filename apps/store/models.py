@@ -3,6 +3,11 @@ from django.core.files import File
 from io import BytesIO
 from PIL import Image
 
+
+class Size(models.Model):
+    name = models.CharField(max_length=100)
+    def __str__(self):
+        return self.name
 class Category(models.Model):
     parent = models.ForeignKey('self',related_name='children',on_delete=models.CASCADE,blank=True,null=True)
     title = models.CharField(max_length=255)
@@ -20,6 +25,7 @@ class Category(models.Model):
     def get_absolute_url(self):
         return '/%s/' % (self.slug)
 class Product(models.Model):
+    
     category=models.ForeignKey(Category,related_name='products',on_delete=models.CASCADE)
     parent=models.ForeignKey('self', related_name='variants', on_delete=models.CASCADE,blank=True,null=True)
     title = models.CharField(max_length=255)
@@ -32,6 +38,8 @@ class Product(models.Model):
     date_added=models.DateTimeField( auto_now_add=True)
     image=models.ImageField(upload_to='uploads/', blank=True,null=True)
     thumbnail=models.ImageField(upload_to='uploads/',blank=True,null=True)
+    
+    sizes=models.ManyToManyField(Size)
     
     
     class Meta:

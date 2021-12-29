@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     
     'apps.core',
     'apps.store',
+    'apps.cart',
 ]
 
 #tailwind
