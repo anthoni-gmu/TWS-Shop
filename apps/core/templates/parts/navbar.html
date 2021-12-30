@@ -1,32 +1,13 @@
+
 {% load static %}
-<nav class="bg-white shadow">
-
-    <div x-data="{ open: false }">
-        <div class="container mx-auto px-6 py-3 md:flex md:justify-between md:items-center">
-            <div class="flex justify-between items-center">
-                <div>
-                    <a class="text-gray-800 text-xl font-bold md:text-2xl hover:text-gray-700" href="{% url 'frontpage' %}">
+<div x-data="{open:false}" class="relative mb-4 bg-white border-b border-gray-200 container">
+  <div class="flex justify-between items-center px-4 py-2 sm:px-6 md:justify-start md:space-x-10">
+    <div>
+        <a class="text-gray-800 text-xl font-bold md:text-2xl hover:text-gray-700 flex" href="{% url 'frontpage' %}">
                         T W S
-                    </a>
-                </div>
-
-                <!-- Mobile menu button -->
-                <div class="flex md:hidden">
-                    <button @click="open = !open" type="button"
-                        class="text-gray-500 hover:text-gray-600 focus:outline-none focus:text-gray-600"
-                        aria-label="toggle menu">
-                        <svg viewBox="0 0 24 24" class="h-6 w-6 fill-current">
-                            <path fill-rule="evenodd"
-                                d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z">
-                            </path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Mobile Menu open: "block", Menu closed: "hidden" -->
-            <div class="md:flex items-center hidden">
-                <form methods="get" action="{% url 'search' %}" class="pt-2 relative mx-auto text-gray-600">
+        </a>
+    </div>
+ <form methods="get" action="{% url 'search' %}" class="pt-2 relative mx-auto text-gray-600">
                     <input
                         class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
                         type="search" name="query" placeholder="Search">
@@ -40,99 +21,226 @@
                         </svg>
                     </button>
                 </form>
-               {% if request.user.is_authenticated %}
-					<div class="navbar-item" >
-
-						<a href="{% url 'myaccount' %}" class="button is-light">My account</a>
-					</div>
-
-					{% else %}
-					<div class="navbar-item" >
-						<div class="buttons" >
-
-							<a href="{% url 'signup' %}" class="button is-primary">Sign Up</a>
-							<a href="{% url 'login' %}" class="button is-light">Log in</a>
-					</div>
-
-					</div>
-					{% endif %}
-                <div class="flex flex-col md:flex-row md:mx-6">
-                    <a class="my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0"
-                    href="{% url 'frontpage' %}">Inicio</a>
-
-                    <div class="relative inline-block" x-data="{ category: false }">
-                        <!-- Dropdown toggle button -->
-                        <div @click="category = !category"
-                            class="my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0">
-                            <p class=" cursor-pointer">Categorias</p>
-                        </div>
-
-                        <!-- Dropdown menu -->
-                        <div class="absolute right-0 z-20 w-48 py-2 mt-2 bg-white rounded-md shadow-xl "
-                            x-show="category" @click.away="category = false">
-                            {% for category in menu_categories  %}
-                            <a href="{% url 'category_detail' category.slug %}"  class="block px-4 py-3 text-sm mb-0 text-gray-600 capitalize transition-colors duration-200 transform  hover:bg-gray-100 ">
-                                {{category}} 
-                            </a>
-                                {% endfor %}
-                        </div>
-                    </div>
-                    <a class="my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0"
-                        href="#">Contact</a>
-                    <a class="my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0"
-                        href="#">About</a>
-                </div>
-
-                <div class="flex justify-center md:block">
-                    <a class="relative text-gray-700 hover:text-gray-600" href="{% url 'cart' %}">
-                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.70711 15.2929C4.07714 15.9229 4.52331 17 5.41421 17H17M17 17C15.8954 17 15 17.8954 15 19C15 20.1046 15.8954 21 17 21C18.1046 21 19 20.1046 19 19C19 17.8954 18.1046 17 17 17ZM9 19C9 20.1046 8.10457 21 7 21C5.89543 21 5 20.1046 5 19C5 17.8954 5.89543 17 7 17C8.10457 17 9 17.8954 9 19Z"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-
-                        <span class="absolute top-0 left-0 rounded-full bg-indigo-500 text-white p-1 text-xs"></span>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="md:hidden items-center " x-show="open" @click.away="open = false">
-            <div class="pt-2 relative mx-auto text-gray-600">
-                <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
-                    type="search" name="search" placeholder="Search">
-                <button type="submit" class="absolute right-0 top-0 mt-5 mr-4">
-                    <svg class="text-gray-600 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px"
-                        viewBox="0 0 56.966 56.966" style="enable-background:new 0 0 56.966 56.966;"
-                        xml:space="preserve" width="512px" height="512px">
-                        <path
-                            d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
-                    </svg>
-                </button>
-            </div>
-            <div class="flex flex-col md:flex-row md:mx-6">
-                <a class="my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0"
-                    href="#">Inicio</a>
-                <a class="my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0"
-                    href="#">Categorias</a>
-
-                <a class="my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0"
-                    href="#">Contact</a>
-                <a class="my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0"
-                    href="#">About</a>
-            </div>
-
-            <div class="flex justify-center md:block">
-                <a class="relative text-gray-700 hover:text-gray-600" href="#">
-                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.70711 15.2929C4.07714 15.9229 4.52331 17 5.41421 17H17M17 17C15.8954 17 15 17.8954 15 19C15 20.1046 15.8954 21 17 21C18.1046 21 19 20.1046 19 19C19 17.8954 18.1046 17 17 17ZM9 19C9 20.1046 8.10457 21 7 21C5.89543 21 5 20.1046 5 19C5 17.8954 5.89543 17 7 17C8.10457 17 9 17.8954 9 19Z"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-
-                    <span class="absolute top-0 left-0 rounded-full bg-indigo-500 text-white p-1 text-xs"></span>
-                </a>
-            </div>
-        </div>
+    <div class="-mr-2 -my-2 md:hidden">
+      <button @click="open=true" type="button" class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-expanded="false">
+        <span class="sr-only">Open menu</span>
+        <!-- Heroicon name: outline/menu -->
+        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
     </div>
-</nav>
+
+    <div class="hidden md:flex-1 md:flex md:items-center md:justify-between">
+      <nav class="flex space-x-10">
+         <div x-data="{ open: false }" class="relative">
+          <!-- Item active: "text-gray-900", Item inactive: "text-gray-500" -->
+          <button @click="open = true" type="button" class="text-gray-500 group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" aria-expanded="false">
+            <span>Categorias</span>
+
+            <svg class="text-gray-400 ml-2 h-5 w-5 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+
+          <div x-show="open" @click.away="open=false" class="absolute z-10 -ml-4 mt-3 transform w-screen max-w-md lg:max-w-3xl">
+            <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
+              <div class="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8 lg:grid-cols-2">
+                
+
+                            {% for category in menu_categories  %}
+               
+
+                <a href="{% url 'category_detail' category.slug %}"  class="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50">
+                  <div class="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-md bg-indigo-500 text-white sm:h-12 sm:w-12">
+                    <!-- Heroicon name: outline/refresh -->
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                  </div>
+                  <div class="ml-4">
+                    <p   class="text-base font-medium text-gray-900">
+                       {{category}}
+                    </p>
+                    <p class="mt-1 text-sm text-gray-500">
+                      Build strategic funnels that will drive your customers to convert
+                    </p>
+                  </div>
+                </a>
+                                {% endfor %}
+
+                
+              </div>
+              <div class="p-5 bg-gray-50 sm:p-8">
+                <a href="#" class="-m-3 p-3 flow-root rounded-md hover:bg-gray-100">
+                  <div class="flex items-center">
+                    <div class="text-base font-medium text-gray-900">
+                      Enterprise
+                    </div>
+                    <span class="ml-3 inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium leading-5 bg-indigo-100 text-indigo-800">
+                      New
+                    </span>
+                  </div>
+                  <p class="mt-1 text-sm text-gray-500">
+                    Empower your entire team with even more advanced tools.
+                  </p>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div> 
+        
+
+      </nav>
+
+      <div x-data="{open:false}" class="flex items-center md:ml-12">
+        {% if request.user.is_authenticated  %}
+        <div class="relative inline-block text-left">
+        <div>
+            <button @click="open=true" type="button" class="inline-flex justify-center w-full rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500" id="menu-button" aria-expanded="true" aria-haspopup="true">
+            
+                <img class="inline-block h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+            
+            </button>
+        </div>
+
+        <div x-show="open" @click.away="open=false" class="z-10 origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+            <div class="py-1" role="none">
+            <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+            <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0">Profile</a>
+            <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0">Library</a>
+            <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0">Settings</a>
+           
+                <a href="" class="text-gray-700 block w-full text-left px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-3">
+                Sign out
+                </a>
+            
+            </div>
+        </div>
+        </div>
+        {% else %}
+<div class="flex justify-center md:block mx-5">
+
+                    <a href="{% url 'login' %}"  class="relative inline-block group">
+                        <span class="absolute inset-0 bg-green-300 transition-transform transform translate-x-2 translate-y-2 group-hover:translate-y-0 group-hover:translate-x-0"></span>
+
+                        <span class="relative text-black inline-block px-5 py-3 font-bold tracking-widest uppercase border-2 border-black">
+                            Acceder!!
+                        </span>
+                    </a>
+                    
+                </div>
+                <div class="flex justify-center md:block mx-5">
+
+                    <a href="{% url 'signup' %}" class="relative inline-block group">
+                        <span class="absolute inset-0 bg-yellow-300 transition-transform transform translate-x-2 translate-y-2 group-hover:translate-y-0 group-hover:translate-x-0"></span>
+
+                        <span class="relative text-black inline-block px-5 py-3 font-bold tracking-widest uppercase border-2 border-black">
+                            Registrate!!
+                        </span>
+                    </a>
+                    
+                </div>
+       
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+
+  <div x-show="open" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="z-10 absolute top-0 inset-x-0 p-2 transition transform origin-top-right md:hidden">
+    <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50">
+      <div class="pt-5 pb-6 px-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <img class="h-8 w-auto" src="{% static 'logo.png' %}" alt="Workflow">
+          </div>
+
+          <div class="-mr-2">
+            <button @click="open=false" type="button" class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+              <span class="sr-only">Close menu</span>
+              <!-- Heroicon name: outline/x -->
+              <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <nav class="grid gap-6">
+            <a href="{% url 'frontpage' %}" class="-m-3 p-3 flex items-center rounded-lg hover:bg-gray-50">
+              
+              <div class="ml-4 text-base font-medium text-gray-900">
+                Marketplace
+              </div>
+            </a>
+
+            <a href="" class="-m-3 p-3 flex items-center rounded-lg hover:bg-gray-50">
+              
+              <div class="ml-4 text-base font-medium text-gray-900">
+                My Products
+              </div>
+            </a>
+
+            <a href="#" class="-m-3 p-3 flex items-center rounded-lg hover:bg-gray-50">
+              
+              <div class="ml-4 text-base font-medium text-gray-900">
+                Library
+              </div>
+            </a>
+
+            
+          </nav>
+        </div>
+      </div>
+      <div class="py-6 px-5">
+        
+        {% if request.user.is_authenticated %}
+        <!-- This example requires Tailwind CSS v2.0+ -->
+        <a href="#" class="flex-shrink-0 group block">
+          <div class="flex items-center">
+            <div>
+              <img class="inline-block h-9 w-9 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+            </div>
+            <div class="ml-3">
+              <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                Tom Cook
+              </p>
+              <p class="text-xs font-medium text-gray-500 group-hover:text-gray-700">
+                View profile
+              </p>
+            </div>
+          </div>
+        </a>
+
+        {% else %}
+       <div class="flex justify-center md:block mx-5">
+
+                    <a href="{% url 'login' %}"  class="relative inline-block group">
+                        <span class="absolute inset-0 bg-green-300 transition-transform transform translate-x-2 translate-y-2 group-hover:translate-y-0 group-hover:translate-x-0"></span>
+
+                        <span class="relative text-black inline-block px-5 py-3 font-bold tracking-widest uppercase border-2 border-black">
+                            Acceder!!
+                        </span>
+                    </a>
+                    
+                </div>
+                <div class="flex justify-center md:block mx-5">
+
+                    <a href="{% url 'signup' %}" class="relative inline-block group">
+                        <span class="absolute inset-0 bg-yellow-300 transition-transform transform translate-x-2 translate-y-2 group-hover:translate-y-0 group-hover:translate-x-0"></span>
+
+                        <span class="relative text-black inline-block px-5 py-3 font-bold tracking-widest uppercase border-2 border-black">
+                            Registrate!!
+                        </span>
+                    </a>
+                    
+                </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>

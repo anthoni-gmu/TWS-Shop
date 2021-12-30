@@ -19,11 +19,9 @@
 	<body>
 
 		<!-- follow me on twitter @asad_codes -->
-		<nav  id="navbarapp">
 
 		{% include 'parts/navbar.html' %}	
 	
-		</nav>
         {% block content %}
         {% endblock %}
 		
@@ -46,7 +44,7 @@
 				}
 			});
 
-			var navbarapp = new Vue({
+			{% comment %} var navbarapp = new Vue({
 				el: '#navbarapp',
 				delimiters: ['[[', ']]'],
 				store: store,
@@ -67,7 +65,7 @@
 					}
 				}
 				
-			});
+			}); {% endcomment %}
 		</script>
 		{% block scripts %}
 		{% endblock scripts %}

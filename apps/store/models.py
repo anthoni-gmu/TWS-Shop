@@ -39,7 +39,7 @@ class Product(models.Model):
     image=models.ImageField(upload_to='uploads/', blank=True,null=True)
     thumbnail=models.ImageField(upload_to='uploads/',blank=True,null=True)
     
-    sizes=models.ManyToManyField(Size)
+    sizes=models.ManyToManyField(Size,blank=True,null=True)
     
     
     class Meta:
@@ -55,7 +55,7 @@ class Product(models.Model):
     def get_absolute_url(self):
         return '/%s/%s/' % (self.category.slug,self.slug)
     
-    def make_thumbnail(self,image,size=(300,200)):
+    def make_thumbnail(self,image,size=(800,700)):
         img=Image.open(image)
         img.convert('RGB')
         img.thumbnail(size)
