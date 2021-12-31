@@ -8,7 +8,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>{% block title %}Tienda{% endblock %}</title>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
-		{% comment %} <link rel="stylesheet" href="{% static 'main.css' %}"> {% endcomment %}
+		<link rel="stylesheet" href="{% static 'style/main.css' %}"> 
 		<script src="https://unpkg.com/vuex@3.6.2/dist/vuex.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="//unpkg.com/alpinejs" defer></script>
@@ -16,20 +16,28 @@
 
 	</head>
 
-	<body>
+	<body >
 
-		<!-- follow me on twitter @asad_codes -->
+		{% include 'parts/cart_plugin.html' %}	
+
 
 		{% include 'parts/navbar.html' %}	
 	
         {% block content %}
         {% endblock %}
 		
+		<script src="https://js.stripe.com/v3/"></script>
+
+
 		<script>
 			var store = new Vuex.Store({
 				state: {
-					numItems: {{ Cartnav.get_total_length }},
-					totalCost:{{Cartnav.get_total_cost}}
+					numItems: {{ cart.get_total_length }},
+					totalCost:{{cart.get_total_cost}},
+					products: [{{ productsstring| safe}}],
+					
+
+
 
 				},
 				
@@ -44,29 +52,268 @@
 				}
 			});
 
-			{% comment %} var navbarapp = new Vue({
-				el: '#navbarapp',
+
+			var productapp = new Vue({
+				el: '#cartapp',
 				delimiters: ['[[', ']]'],
 				store: store,
-				data(){
+
+				data() {
 					return {
-						menuClass:false
+						first_name: '{{first_name}}',
+						last_name: '{{last_name}}',
+						email: '{{email}}',
+						address: '{{address}}',
+						zipcode: '{{zipcode}}',
+						place: '{{place}}',
+						phone: '{{phone}}',
+						errors:[],
+						products: [{{ productsstring| safe}}],
+						coupon_value:0,
+						coupon_code: '',
+						showCouponCodeError:false
 					}
 				},
 				computed: {
 					numItems: function() {
 						return store.state.numItems
+					},
+					totalCost: function() {
+						return store.state.totalCost
+					},
+					totalCostWithCoupon:function() {
+						if(this.coupon_value>0){
+							return store.state.totalCost*(parseInt(this.coupon_value)/100)
+						}else{
+							return store.state.totalCost;
+						}
 					}
+					
+
 				},
-				methods:{
-					toggleMenu(){
-						console.log(menuClass);
-						this.menuClass = !this.menuClass;
-					}
+				methods: {
+					applyCoupon(){
+						if(this.coupon_value !==''){
+							fetch('/api/can_use/?coupon_code='+this.coupon_code,{
+								method: 'GET',
+							})
+							.then((response)=>{
+								console.log(this.coupon_value)
+								return response.json();
+							})
+							.then((data)=>{
+								if(data.amount){
+									
+									this.showCouponCodeError=false
+
+									this.coupon_value=parseInt(data.amount)
+								}else{
+									this.coupon_value=0
+									this.showCouponCodeError=true
+
+									setTimeout(() =>{
+										this.showCouponCodeError=false;
+									},2000)
+								}
+							});
+						}else{
+							this.showCouponCodeError=true
+
+							setTimeout(() =>{
+								this.showCouponCodeError=false;
+							},2000)
+
+						}
+					},
+					incrementQuantity(product_id, quantity, price){
+						store.commit('increment', 1);
+						store.commit('changeTotalCost', parseFloat(price))
+						for(var i=0;i<this.products.length;i++){
+							var product=this.products[i]
+
+							if(product.id===product_id){
+								if(quantity < product.num_available){
+									var data = {
+										'product_id': product_id,
+										'update': true,
+										'quantity': parseInt(quantity) + 1
+									};
+									fetch('/api/add_to_cart/', {
+										method: 'POST',
+										headers: {
+											'Content-Type': 'application/json',
+											'X-CSRFToken': '{{csrf_token}}'
+										},
+										credentials: 'same-origin',
+										body: JSON.stringify(data)
+									})
+									.then((response) => {
+					
+										for (var i = 0; i < this.products.length; i++) {
+											var product = this.products[i];
+					
+											if (product.id === product_id) {
+												this.products[i].quantity = parseInt(this.products[i].quantity) + 1;
+												this.products[i].total_price = parseInt(this.products[i].quantity) * parseFloat(this.products[i].price)
+											}
+										}
+					
+									})
+									.catch(function (error) {
+										console.log('Error 2');
+										console.log(error);
+									})
+								}else{
+									alert('No more available in stock');
+								}
+							}
+						}
+					
+					},
+					decrementQuantity(product_id, quantity, price){
+
+						var data = {
+							'product_id': product_id,
+							'update': true,
+							'quantity': parseInt(quantity) - 1
+						};
+
+
+						if (parseInt(quantity) - 1 === 0) {
+							this.removeFromCart(product_id)
+						} else {
+							store.commit('increment', -1);
+							store.commit('changeTotalCost', -parseFloat(price))
+							fetch('/api/add_to_cart/', {
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/json',
+									'X-CSRFToken': '{{csrf_token}}'
+								},
+								credentials: 'same-origin',
+								body: JSON.stringify(data)
+							})
+								.then((response) => {
+									console.log(response);
+
+									for (var i = 0; i < this.products.length; i++) {
+										var product = this.products[i];
+
+										if (product.id === product_id) {
+											this.products[i].quantity = parseInt(this.products[i].quantity) - 1;
+											this.products[i].total_price = parseInt(this.products[i].quantity) * parseFloat(this.products[i].price)
+										}
+									}
+
+								})
+								.catch(function (error) {
+									console.log('Error 2');
+									console.log(error);
+								})
+						}
+
+					},
+					removeFromCart(product_id){
+						var data = {
+							'product_id': product_id,
+
+						};
+						fetch('/api/remove_from_cart/', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+								'X-CSRFToken': '{{csrf_token}}'
+							},
+							credentials: 'same-origin',
+							body: JSON.stringify(data)
+						})
+							.then((response) => {
+								console.log(response);
+
+								this.products = this.products.filter(product => product.id !== product_id);
+							})
+							.catch(function (error) {
+								console.log('Error 2');
+								console.log(error);
+							})
+					},
+					buy(){
+						var data = {
+							'first_name': this.first_name,
+							'last_name': this.last_name,
+							'email': this.email,
+							'address': this.address,
+							'zipcode': this.zipcode,
+							'place': this.place,
+							'phone': this.phone,
+							'coupon_code': this.coupon_code,
+						};
+
+						this.errors=[]
+						if(data.first_name===""){
+							this.errors.push('First name is empty')
+						}
+						if(data.last_name===""){
+							this.errors.push('Last name is empty')
+						}
+						if(data.email===""){
+							this.errors.push('Email  is empty')
+						}
+						if(data.address===""){
+							this.errors.push('Address  is empty')
+						}
+						if(data.place===""){
+							this.errors.push('place  is empty')
+						}
+						if(data.zipcode===""){
+							this.errors.push('zipcode  is empty')
+						}
+						if(data.phone===""){
+							this.errors.push('Phone is empty')
+						}
+						if(this.errors.length===0){
+							var stripe=Stripe('{{pub_key}}');
+
+							fetch('/api/create_checkout_session/',{
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/json',
+									'X-CSRFToken': '{{ csrf_token }}'
+								},
+								credentials: 'same-origin',
+								body: JSON.stringify(data),
+
+							})
+							.then(function(response) {
+								return response.json()
+							})
+							.then(function(session) {
+								return stripe.redirectToCheckout({ sessionId: session.session.id })
+							})
+							.then(function(result) {
+								if (result.error) {
+									alert(result.error.message)
+								}
+							})
+							.catch(function(error) {
+								console.log('Error:', error);
+							});products
+						}
+						
+
+
+						
+					},
 				}
-				
-			}); {% endcomment %}
+
+			});
+
+			
+
+			
 		</script>
+
+
 		{% block scripts %}
 		{% endblock scripts %}
 		

@@ -62,3 +62,6 @@ class Cart(object):
 
     def get_total_cost(self):
         return sum(float(item['total_price']) for item in self)
+    
+    def items(self):
+        return 0
